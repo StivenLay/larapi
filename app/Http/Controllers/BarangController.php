@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Kategori;
 use App\Barang;
 use JWTAuth;
+use DB;
 
 class BarangController extends Controller
 {
@@ -20,8 +21,11 @@ class BarangController extends Controller
      */
     public function index()
     {
+        $data = DB::table('tbl_barang')
+            ->leftjoin('tbl_kategori', 'tbl_kategori.id', '=', 'tbl_barang.nama_kategori')
+            ->select('tbl_barang.*', 'tbl_kategori.nama_kategori')->get();
         return response()->json([
-            'data' => Barang::select('id', 'nama_barang', 'nama_kategori', 'price')->get()
+            'data' => $data
         ]);
     }
 
@@ -74,8 +78,10 @@ class BarangController extends Controller
      */
     public function show($id)
     {
-        $barang = Barang::select('*')->where('id', $id)->get();
-
+        $barang = DB::table('tbl_barang')
+            ->leftjoin('tbl_kategori', 'tbl_kategori.id', '=', 'tbl_barang.nama_kategori')
+            ->select('tbl_barang.*', 'tbl_kategori.nama_kategori')
+            ->where('tbl_barang.id', $id)->get();
         if (!$barang) {
             return response()->json([
                 'success' => false,
@@ -109,7 +115,21 @@ class BarangController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $barang = Barang::where('id', $id)->first();
+        if ($barang) {
+            $barang->nama_barang = $request->nama_barang ? $request->nama_barang : $barang->nama_barang;
+            $barang->nama_kategori = $request->nama_kategori ? $request->nama_kategori : $barang->nama_kategori;
+            $barang->price = $request->price ? $request->price : $barang->price;
+            $barang->save();
+            return response()->json([
+                'message' => "success update ",
+                'data' => $barang
+            ]);
+        } else {
+            return response()->json([
+                'message' => "failed update " . $id
+            ]);
+        }
     }
 
     /**
@@ -120,6 +140,9 @@ class BarangController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Barang::destroy($id);
+        return response()->json([
+            'message' => 'data dengan id ' . $id . ' berhasil dihapus'
+        ]);
     }
 }

@@ -33,5 +33,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     // barang
     Route::get('/barang', 'BarangController@index');
     Route::get('/barang/{id}', 'BarangController@show');
-    // Route::post('/barang', 'BarangController@store');
+    Route::post('/barang', 'BarangController@store');
+    Route::post('/barang/{id}', 'BarangController@update');
+    Route::delete('/barang/{id}', 'BarangController@destroy');
 });
