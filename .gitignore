@@ -7,6 +7,6 @@
 .env.backup
 .phpunit.result.cache
 Homestead.json
-Homestead.yaml
+Homestead.yamlgi
 npm-debug.log
 yarn-error.log

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\User as UserResource;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends Controller
 {

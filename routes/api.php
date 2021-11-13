@@ -19,4 +19,19 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::post('/register', 'RegisterController@register');
 Route::post('/login', 'LoginController@login');
-Route::get('/user', 'UserController@user');
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::get('/user', 'UserController@user');
+
+    // kategori
+    Route::get('/kategori', 'KategoriController@index'); //read all
+    Route::get('/kategori/{id}', 'KategoriController@show'); //read detail
+    Route::post('/kategori', 'KategoriController@store'); //create
+    Route::post('/kategori/{id}', 'KategoriController@update'); //update
+    Route::delete('/kategori/{id}', 'KategoriController@destroy'); //delete
+
+
+    // barang
+    Route::get('/barang', 'BarangController@index');
+    Route::get('/barang/{id}', 'BarangController@show');
+    // Route::post('/barang', 'BarangController@store');
+});
